@@ -1,0 +1,56 @@
+@import 'src/assets/styles/variables';
+
+.list {
+    margin: 1.5rem;
+    background-color: $RaisinBlackLight;
+    padding: 1rem 0.5rem;
+    border-radius: 15px;
+    
+    
+    > div > h2 {
+        margin-left: 1rem;
+    }
+
+    .emailMessage {
+        margin: 1rem;
+        padding: 1rem;
+        background-color: $spaceCadetLight;
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid $ultraViolet;
+        
+        .emailInfoUser {
+            padding-bottom: 1rem;
+            color: $lavenderLight;
+        }
+        
+        .messageTitle {
+            display: flex;
+            padding: 0 20px;
+            width: 100%;
+            outline: none;
+            background: $spaceCadetDark;
+            color: $coolGrayLight;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            min-height: 44px;
+            align-items: center;
+        }
+        
+        .messageContext {
+            display: flex;
+            margin-top: 1rem;
+            padding: 0 20px;
+            width: 100%;
+            outline: none;
+            background: $ultraVioletLight;
+            color: $RichBlack;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            min-height: 44px;
+            align-items: center;
+        }
+    }
+}

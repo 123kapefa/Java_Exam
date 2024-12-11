@@ -1,0 +1,33 @@
+@import 'src/assets/styles/variables';
+
+.wrapperInnerPage {
+	display: flex;
+	flex-direction: column;
+	margin: 40px;
+	padding: 1rem;
+	justify-content: center;
+	align-items: center;
+}
+
+.wrapperButtons {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 400px;
+	
+	> div {
+		width: 48%;
+		> button {
+			width: 100%;
+		}
+		&:last-child > button {
+			color: $nightLight;
+			background-color: $glaucous;
+			transition: opacity 0.15s ease;
+			&:hover {
+				background-color: $coolGray;
+				opacity: 1;
+			}
+		}
+	}
+}

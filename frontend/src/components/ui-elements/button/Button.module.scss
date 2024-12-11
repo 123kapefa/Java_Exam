@@ -1,0 +1,32 @@
+@import 'src/assets/styles/variables';
+
+$accent-04: rgba($accent, 0.4);
+
+.button {
+	outline: none;
+	font-size: 20px;
+	border-radius: 10px;
+	padding: 13px 48px;
+	transition: background-color 0.15s ease;
+	background-color: $nightLight;
+	border: solid $ultraViolet 1px;
+	cursor: pointer;
+	color: $ultraViolet;
+
+	&:hover {
+		color: $nightLight;
+		background-color: $coolGray;
+	}
+
+	&.main {
+		background-color: rgba(255, 255, 255, 0.25);
+
+		&:hover {
+			background-color: $coolGray;
+		}
+	}
+}
+
+.wrapper {
+	text-align: center;
+}

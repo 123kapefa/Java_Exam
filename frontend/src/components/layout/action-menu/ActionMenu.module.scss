@@ -1,0 +1,78 @@
+@import '../../../assets/styles/variables';
+@import '../../../assets/styles/animations';
+
+.wrapper {
+	position: relative;
+
+	button {
+		background-color: transparent;
+		border: none;
+		outline: none;
+		cursor: pointer;
+		font-size: 18px;
+		color: $delftBlueDark;
+		
+		&:hover,
+				&.active {
+					color: $RichBlack;
+					margin: 1px 0;
+				}
+	}
+
+	> button {
+		font-size: 30px;
+		
+		> svg {
+			animation: opacity 1s;
+			
+			> path {
+				fill: $glaucous
+			}
+		}
+	}
+	
+	.menu {
+		position: absolute;
+		background-color: $glaucous;
+		padding: 10px;
+		font-size: 18px;
+		box-shadow: $bx-16;
+		border-radius: 5px;
+		min-width: 200px;
+		display: none;
+		animation: opacity 0.4s;
+		color: $crimsonDark;
+		height: calc(100vh - 70px);
+		
+		&.show {
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		> ul {
+			list-style: none;
+			li {
+				text-decoration: none;
+				transition: margin 0.2s ease;
+				
+				&:hover,
+				&.active {
+					color: $RaisinBlackLight;
+					margin: 1px 0;
+				}
+				
+				> a {
+					text-decoration: none;
+					color: $delftBlueDark;
+					transition: color 0.2s ease;
+					&:hover,
+				&.active {
+					color: $RaisinBlackLight;
+					margin: 1px 0;
+				}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,22 @@
+@import 'src/assets/styles/variables';
+
+.header {
+	background-color: transparent;
+}
+
+.infoBlock {
+	display: flex;
+	flex-direction: row;
+	
+	> p {
+		margin: 0.5rem;
+	}
+}
+
+button {
+	padding: 0.5rem 1rem;
+	border-radius: 10px;
+	background-color: $delftBlueDark;
+	border: none;
+	color: $lavenderLight;
+}

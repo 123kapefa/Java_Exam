@@ -3,7 +3,7 @@ package database.services.implServices;
 import database.entities.Todo_Role;
 import database.repositories.TodoRoleRepository;
 import database.services.RoleService;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import models.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

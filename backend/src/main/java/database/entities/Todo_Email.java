@@ -1,7 +1,7 @@
 package database.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -20,12 +20,6 @@ public class Todo_Email {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
 
     @Column(name = "email_to", nullable = false)
     private int emailTo;
@@ -46,16 +40,4 @@ public class Todo_Email {
 
     @Column(nullable = false)
     private String context;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-    // Getters and setters...
 }

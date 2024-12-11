@@ -9,6 +9,7 @@ public interface UserService {
     Iterable<Todo_User>  findAll();
     Optional<Todo_User> findById(Long userId);
     Optional<Todo_User> findByLogin(String login);
+    Optional<Todo_User> findByUsername(String username);
     Optional<Todo_User> findByEmail(String email);
 
     Boolean existsByEmail(String email);

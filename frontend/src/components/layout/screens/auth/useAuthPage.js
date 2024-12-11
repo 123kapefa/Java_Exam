@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../../hooks/useAuth.js'
 
 import AuthService from '../../../../services/auth.service.js'
+import Cookies from "js-cookie";
 
 export const useAuthPage = () => {
 	
@@ -33,7 +34,9 @@ export const useAuthPage = () => {
 		mutationKey: ['auth'],
 		mutationFn: ({ email, password, login }) => AuthService.main(type, email, password, login),
 		onSuccess: () => {
+			if (Cookies.get('UID') != null) {
 				setIsAuth(true)
+			}
 				reset()
 		}
 	})

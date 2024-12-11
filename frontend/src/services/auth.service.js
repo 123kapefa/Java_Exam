@@ -8,7 +8,7 @@ class AuthService {
 		try {
 			const payload = type === 'login'
 				? { email, password }
-				: { login, email, password };
+				: { role: "user", login, user: "artur", email, password };
 
 			const response = await $axios.post(`auth/${type}`, payload);
 			const { user, token } = response.data;
@@ -17,8 +17,7 @@ class AuthService {
 
 			return response.data;
 		} catch (error) {
-			console.error('Error in AuthService.main:', error);
-			throw error;
+			console.error('Signup failed:', error.response ? error.response.data : error.message);
 		}
 	}
 

@@ -2,56 +2,85 @@ package controllers;
 
 import database.entities.Todo_Role;
 import database.entities.Todo_User;
+import database.services.RoleService;
 import database.services.UserService;
+import database.services.implServices.UserServiceImpl;
 import jakarta.validation.Valid;
 import models.MessageResponse;
+import models.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import request.RegisterRequest;
+import response.AuthResponse;
+import security.jwt.JwtProvider;
+//import security.userDetails.UserDetailsServiceImpl;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
-// http://localhost:8080/api/auth/register
-@CrossOrigin(origins = "http://localhost:8080")
-//@CrossOrigin
 @RestController
-@RequestMapping("/api")
 public class AuthController {
 
-    @Autowired private UserService service;
+    @Autowired private UserService userService;
+    @Autowired private RoleService roleService;
     @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private UserServiceImpl customUserDetails;
 
-    @RequestMapping( method = RequestMethod.POST, path = "/auth/register")
-    public ResponseEntity<MessageResponse> registerHandler(@Valid @RequestBody RegisterRequest request) {
-        if (service.existsByEmail(request.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+    @RequestMapping( method = RequestMethod.POST, path = "/api/auth/register")
+    public ResponseEntity<AuthResponse> registerHandler(@Valid @RequestBody RegisterRequest request) throws Exception {
+        if (userService.existsByEmail(request.getEmail())) {
+            throw new Exception("Email is already used with another account");
         }
 
         Todo_User newUser = new Todo_User(
+                request.getUsername(),
                 request.getLogin(),
                 request.getEmail(),
                 passwordEncoder.encode(request.getPassword())
         );
 
-        Set<String> strRoles = Collections.singleton(request.getRole());
-        Set<Todo_Role> roles = new HashSet<>();
 
-        if (strRoles == null) {
+        String strRole = request.getRole();
+        switch (strRole) {
+            case "admin": {
+                Todo_Role todoRole = roleService.findByName(Role.ROLE_ADMIN)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found!"));
 
-            service.save(newUser);
-            return ResponseEntity.ok(new MessageResponse("User registered successfully"));
-        } else {
-            return (ResponseEntity<MessageResponse>) ResponseEntity.status(HttpStatus.ACCEPTED);
+                newUser.setRole(todoRole);
+                break;
+            }
+            case "mod": {
+                Todo_Role todoRole = roleService.findByName(Role.ROLE_MODERATOR)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found!"));
+
+                newUser.setRole(todoRole);
+                break;
+            }
+            default: {
+                Todo_Role todoRole = roleService.findByName(Role.ROLE_USER)
+                        .orElseThrow(() -> new RuntimeException("Error: Role is not found!"));
+
+                newUser.setRole(todoRole);
+                break;
+            }
         }
 
+        Todo_User savedUser = userService.save(newUser);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(savedUser.getEmail(), savedUser.getPassword());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = JwtProvider.generateToken(authentication);
+
+        AuthResponse authResponse = new AuthResponse();
+        authResponse.setJwt(token);
+        authResponse.setMessage("Register Success");
+        authResponse.setStatus(true);
+        return new ResponseEntity<AuthResponse>(authResponse, HttpStatus.OK);
+        //return ResponseEntity.ok(new MessageResponse("User registered successfully"));
     }
 
 //    @GetMapping("/login")
@@ -104,6 +133,30 @@ public class AuthController {
 //        model.addAttribute("user", new Todo_User());
 //        return "register";
 //    }
+
+    private Authentication authenticate(String username, String password) {
+
+        System.out.println(username+"---++----"+password);
+
+        UserDetails userDetails = customUserDetails.loadUserByUsername(username);
+
+        System.out.println("Sig in in user details"+ userDetails);
+
+        if(userDetails == null) {
+            System.out.println("Sign in details - null" + userDetails);
+
+            throw new BadCredentialsException("Invalid username and password");
+        }
+        if(!passwordEncoder.matches(password,userDetails.getPassword())) {
+            System.out.println("Sign in userDetails - password mismatch"+userDetails);
+
+            throw new BadCredentialsException("Invalid password");
+
+        }
+        return new UsernamePasswordAuthenticationToken(userDetails,null,userDetails.getAuthorities());
+
+    }
+
 
 
 }

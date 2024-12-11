@@ -1,6 +1,6 @@
 package database.entities;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import models.Role;
 
 @Entity

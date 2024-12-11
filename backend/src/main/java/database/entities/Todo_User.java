@@ -2,11 +2,11 @@ package database.entities;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.HashSet;
+import jakarta.persistence.*;
+import models.Role;
+
 import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "users", schema = "public")
@@ -16,14 +16,11 @@ public class Todo_User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
-
     @Column(nullable = false)
     private String login;
+
+    @Column(nullable = false)
+    private String username;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -32,11 +29,11 @@ public class Todo_User {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
-    @ManyToMany (fetch = FetchType.LAZY)
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinTable(name = "roles",
                joinColumns = @JoinColumn(name = "user_id"),
                inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Todo_Role> role = new HashSet<>();
+    private Todo_Role role;
 
     @OneToMany(mappedBy = "emailFromUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Todo_Email> sentEmails;
@@ -44,31 +41,24 @@ public class Todo_User {
     @OneToMany(mappedBy = "emailToUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Todo_Email> receivedEmails;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
-
-
     public Todo_User() { }
-    public Todo_User(String login, String email, String password) {
+    public Todo_User(String username, String login, String email, String password) {
+        this.username = username;
         this.login = login;
         this.email = email;
         this.password = password;
     }
 
     public Long getId() { return id; }
-    public Set<Todo_Role> getRole() { return role; }
+    public Todo_Role getRole() { return role; }
+    public String getUsername() { return username; }
     public String getLogin() { return login; }
     public String getEmail() { return email; }
     public String getPassword() { return password; }
 
     public Long setId(Long id) { return this.id = id; }
+    public Todo_Role setRole(Todo_Role role) { return this.role = role; }
+    public String setUsername(String username) { return this.username = username; }
     public String setLogin(String login) { return this.login = login; }
     public String setEmail(String email) { return this.email = email; }
     public String setPassword(String password) { return this.password = password; }
